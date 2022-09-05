@@ -149,9 +149,71 @@ vote-94849dc97-zq79v      1/1     Running   0          2m29s
 worker-dd46d7584-xsbnf    1/1     Running   1          105s
 ]0;root@ip-172-31-1-221:~/example-voting-app/k8s-specifications[root@ip-172-31-1-221 k8s-specifications]# 
 
+[root@ip-172-31-1-221 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-98mzz        1/1     Running   0          8m26s
+redis-868d64d78-h9lmn     1/1     Running   0          10m
+result-5d57b59f4b-6xtx8   1/1     Running   0          10m
+vote-94849dc97-zq79v      1/1     Running   0          10m
+worker-dd46d7584-xsbnf    1/1     Running   1          9m23s
+[root@ip-172-31-1-221 k8s-specifications]#
+[root@ip-172-31-1-221 k8s-specifications]# kubectl delete all --all
+pod "db-b54cd94f4-98mzz" deleted
+pod "redis-868d64d78-h9lmn" deleted
+pod "result-5d57b59f4b-6xtx8" deleted
+pod "vote-94849dc97-zq79v" deleted
+pod "worker-dd46d7584-xsbnf" deleted
+service "db" deleted
+service "kubernetes" deleted
+service "redis" deleted
+service "result" deleted
+service "vote" deleted
+deployment.apps "db" deleted
+deployment.apps "redis" deleted
+deployment.apps "result" deleted
+deployment.apps "vote" deleted
+deployment.apps "worker" deleted
+[root@ip-172-31-1-221 k8s-specifications]# kubectl get po
+No resources found in default namespace.
+
+[root@ip-172-31-1-221 k8s-specifications]# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+[root@ip-172-31-1-221 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS              RESTARTS   AGE
+db-b54cd94f4-g42p4        0/1     ContainerCreating   0          5s
+redis-868d64d78-c9vb8     0/1     ContainerCreating   0          5s
+result-5d57b59f4b-rg27c   0/1     ContainerCreating   0          5s
+vote-94849dc97-zdtkx      0/1     ContainerCreating   0          5s
+worker-dd46d7584-rsvkt    0/1     ContainerCreating   0          5s
+[root@ip-172-31-1-221 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS              RESTARTS   AGE
+db-b54cd94f4-g42p4        1/1     Running             0          20s
+redis-868d64d78-c9vb8     0/1     ContainerCreating   0          20s
+result-5d57b59f4b-rg27c   0/1     ContainerCreating   0          20s
+vote-94849dc97-zdtkx      0/1     ContainerCreating   0          20s
+worker-dd46d7584-rsvkt    0/1     ContainerCreating   0          20s
+[root@ip-172-31-1-221 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-g42p4        1/1     Running   0          57s
+redis-868d64d78-c9vb8     1/1     Running   0          57s
+result-5d57b59f4b-rg27c   1/1     Running   0          57s
+vote-94849dc97-zdtkx      1/1     Running   0          57s
+worker-dd46d7584-rsvkt    1/1     Running   0          57s
+[root@ip-172-31-1-221 k8s-specifications]#
+
+
 --------------------------------------------------------------------
 
 Observations: 
 1. After deleting Voting Pod, the pod got recreated and there was no effect on the app. Cross checked with manual voting.
 2. After deleting Worker Pod, the pod got created and there was no effect on the app. Cross checked with manual voting.
 3. After deleting db Pod, the pod got created. But the Voting app in the browsed misbehaved. The results were not correct. 
+4. After deleting all the pods and re-creating, the app started working fine.
